@@ -1,0 +1,69 @@
+{%load static%}
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Login and Registration Form in HTML | CodingNepal</title>
+      <link rel="stylesheet" href="{% static 'styles/login.css' %}">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+   <body>
+      <div class="wrapper">
+         <div class="title-text">
+            <div class="title login">
+               Sign-up
+            </div>
+            <div class="title signup">
+               Signup Form
+            </div>
+         </div>
+         <div class="form-container">
+            <div class="slide-controls">
+               <input type="radio" name="slide" id="login" checked>
+               <input type="radio" name="slide" id="signup">
+               <label for="login" class="slide login">Google</label>
+               <label for="signup" class="slide signup">Facebook</label>
+               <div class="slider-tab"></div>
+            </div>
+            <div class="form-inner">
+
+
+
+               <form action="#" class="signup" method="post">
+                  {%csrf_token%}
+                  <div class="field">
+                     <input type="text" placeholder="Username" required>
+                     {{form.username}}
+                  </div>
+                  <div class="field">
+                     <input type="text" placeholder="Email" required>
+                     {{form.email}}
+                  </div>
+                  <div class="field">
+                     <input type="password" placeholder="Password" required>
+                     {{form.password1}}
+                  </div>
+                  <div class="field">
+                     <input type="password" placeholder="Confirm password" required>
+                     {{form.password2}}
+                  </div>
+                  <div class="field btn">
+                     <div class="btn-layer"></div>
+                     <input type="submit" value="Signup">
+                    </div> <div class="signup-link">
+                        Already member? <a href="{% url 'loginView'%}">Login Now</a>
+                    </div>
+                  </div>
+               </form>
+
+
+
+
+            </div>
+       
+         </div>
+      
+     
+   </body>
+</html>
