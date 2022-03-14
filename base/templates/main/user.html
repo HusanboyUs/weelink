@@ -23,9 +23,9 @@
           
             
               
-             <div class="name">{{user.userprofile.name}}</div>      
-            <div class="desc">{{user.userprofile.bio}}</div>
-            <div class="location" style="color: white; font-size: small;"> Based in</a> {{user.userprofile.location}}</div>
+             <div class="name">{{profile.name}}</div>      
+            <div class="desc">{{profile.bio}}</div>
+            <div class="location" style="color: white; font-size: small;"> Based in</a> {{profile.location}}</div>
             <div class="sm">
                 <a href="{{user.userprofile.facebook}}" class="fab fa-facebook " style="text-decoration: none;"></a>
                 <a href="{{user.userprofile.instagram}}" class="fab fa-instagram" style="text-decoration: none;"></a>
@@ -36,21 +36,19 @@
         </div>
         <div class="card-footer">
             <div class="d-grid gap-2">
-                <!--
-               {%   for data in userlinks   %}
-                    <a href="{{ data.link}}" class="btn btn-lg  bg-success" type="button" style="background-color: #F73F52; color: white;">{{  data.link_name}}</a>
-               {%   endfor  %}
-                <br>
-                -->
-                {%for links in links%}
-                    <a href="{{links.link}}" class="btn btn-outline-success">{{links.link_name}}</a>
-                    <a href="{%url 'deleteLink' links.id%}" class='btn btn-outline-danger type="button'>Delete {{links}}</a>
-                {%endfor%}
+               
                 
-                <tr>Edit buttons are invisible for viewers</tr>
-                <a href="{% url 'updateProfileView' %}" class="btn btn-lg  bg-primary btn-sm" type="button" style="background-color: #F73F52; color: white;">Update Profile</a>
+            {%for links in links%}
+                    
+                    <a href="{{ links.link}}" class="btn btn-lg  bg-success" type="button" style="background-color: #F73F52; color: white;">{{  links.link_name}}</a>
                 
-                <a href="{% url 'addProfileLink' %}" class="btn btn-lg  bg-secondary btn-sm" type="button" style="background-color: #F73F52; color: white;">Add Links</a> 
+            {%endfor%}
+               <br>
+                
+             
+                
+                
+                <a href="{% url 'loginView' %}" class="btn btn-lg  bg-primary btn-sm" type="button" style="background-color: #F73F52; color: white;">Make my Weelink</a>
               </div> 
         </div> 
         <br>

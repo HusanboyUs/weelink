@@ -1,5 +1,6 @@
 from dataclasses import field, fields
 from operator import mod
+from pyexpat import model
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -21,3 +22,9 @@ class addLinksForm(forms.ModelForm):
     class Meta:
         model=ProfileLink
         fields='__all__'
+
+
+class editProfileLinkForm(forms.ModelForm):
+    class Meta:
+        model=ProfileLink
+        fields='__all__'        

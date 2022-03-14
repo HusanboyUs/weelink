@@ -1,15 +1,10 @@
-from errno import ESTALE
 from multiprocessing import context
-import re
-from django import forms
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Profile, ProfileLink
-from .forms import userRegisterForm,updateProfileForm,addLinksForm
-
-
+from .forms import userRegisterForm,updateProfileForm,addLinksForm,editProfileLinkForm
 
 
 
@@ -45,9 +40,11 @@ def profileView(request):
 def updateProfileView(request):
     form=updateProfileForm
     if request.method=='POST':
-        form=updateProfileForm(request.POST, instance=request.user.userprofile)
+        form=updateProfileForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance=form.save(commit=False)
+            instance.user=request.user
+            instance.save()
             return redirect('profileView')
 
     context={'form':form}
@@ -60,23 +57,37 @@ def addProfileLink(request):
     user=request.user
     print(user)
     if request.method=='POST':
-        form=addLinksForm(request.POST, instance=request)
+        form=addLinksForm(request.POST)
         if form.is_valid():
+            user=request.user
+            user_user=Profile.objects.filter(user=user).first()
             instance=form.save(commit=False)
-            instance.user=user
+            instance.user=user_user
             instance.save()
             return redirect('profileView')
     context={'form':form}
     return render(request, 'main/addProfileLink.html', context)   
 
+      
+    
+@login_required(login_url='loginView')
+def deleteProfileLink(request, pk):
+    link=ProfileLink.objects.get(id=pk)
+    form=editProfileLinkForm
+    if request.method=='POST':
+        link.delete()
+        return redirect('profileView')
+    context={'link':link, 'form':form}
+    return render(request, 'main/deleteLinks.html', context)        
 
 
 
 
-
-
-def userView(request):
-    pass
+def userView(request, user_slug):
+    profile=get_object_or_404(Profile, slug=user_slug)
+    links=ProfileLink.objects.filter(user=profile)
+    context={'profile':profile, 'links':links}
+    return render(request, 'main/user.html', context)
 
 
 def homeView(request):

@@ -1,4 +1,3 @@
-from unicodedata import name
 from django.urls import path
 from . import views
 urlpatterns = [
@@ -9,5 +8,8 @@ urlpatterns = [
     #profile
     path('profile/', views.profileView, name='profileView'),
     path('updateProfile/', views.updateProfileView, name='updateProfileView'),
-    path('addLink/', views.addProfileLink, name='addProfileLink')
+    path('addLink/', views.addProfileLink, name='addProfileLink'),
+    path('deleteLink/<str:pk>/', views.deleteProfileLink, name='deleteLink' ),
+    #slug for searching the user
+    path('<slug:user_slug>', views.userView, name='viewPage') 
 ]

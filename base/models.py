@@ -1,11 +1,9 @@
-from pyexpat import model
-from statistics import mode
-from tabnanny import verbose
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
+from django.utils.text import slugify
+
 
 class Profile(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
@@ -17,7 +15,13 @@ class Profile(models.Model):
     facebook=models.CharField(max_length=100)
     telegram=models.CharField(max_length=100)
     created=models.DateTimeField(auto_now_add=True)
-    #slug field for users
+    slug=models.SlugField(unique=True, null=True)
+    
+
+    def save(self, *args, **kwargs):
+        self.slug =slugify(self.slug)
+        super(Profile, self).save(*args, **kwargs)
+
     
     def __str__(self):
         return self.name
