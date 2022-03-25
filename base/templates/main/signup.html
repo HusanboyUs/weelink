@@ -4,7 +4,7 @@
 <html lang="en" dir="ltr">
    <head>
       <meta charset="utf-8">
-      <title>Login and Registration Form in HTML | CodingNepal</title>
+      <title>Register-Weelink</title>
       <link rel="stylesheet" href="{% static 'styles/login.css' %}">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
@@ -30,24 +30,27 @@
 
 
 
-               <form action="#" class="signup" method="post">
+               <form   method="post" class="signup">
                   {%csrf_token%}
+                  
                   <div class="field">
-                     <input type="text" placeholder="Username" required>
+                     
                      {{form.username}}
+                     
                   </div>
                   <div class="field">
-                     <input type="text" placeholder="Email" required>
+                    
                      {{form.email}}
                   </div>
                   <div class="field">
-                     <input type="password" placeholder="Password" required>
-                     {{form.password1}}
+                     <input type="password" placeholder="Create a strong password" required {{form.password1}}
+                     
                   </div>
                   <div class="field">
-                     <input type="password" placeholder="Confirm password" required>
-                     {{form.password2}}
+                     <input type="password" placeholder="Confirm password" required {{form.password2}}
+                     
                   </div>
+                  {{form.errors}}
                   <div class="field btn">
                      <div class="btn-layer"></div>
                      <input type="submit" value="Signup">

@@ -1,3 +1,6 @@
+from pyexpat import model
+from random import choice, choices
+from xml.dom.minidom import CharacterData
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save,pre_save
@@ -10,12 +13,12 @@ class Profile(models.Model):
     name=models.CharField(max_length=100)
     location=models.CharField(max_length=10)
     bio=models.CharField(max_length=20)
-    #avatar=models.FieldFile()
+    avatar=models.FileField(null=True, blank=True, upload_to='images/')
     instagram=models.CharField(max_length=100)
     facebook=models.CharField(max_length=100)
     telegram=models.CharField(max_length=100)
     created=models.DateTimeField(auto_now_add=True)
-    slug=models.SlugField(unique=True, null=True)
+    slug=models.SlugField(unique=True, blank=True, null=True)
     
 
     def save(self, *args, **kwargs):
@@ -40,8 +43,8 @@ class Profile(models.Model):
 
 class ProfileLink(models.Model):
     user=models.ForeignKey(Profile, default=1, on_delete=models.CASCADE, db_constraint=False, related_name='linkowner')
-    link_name=models.CharField(max_length=12, null=True, default='Link Name')
-    link=models.CharField(max_length=200, null=True, default='My link')
+    link_name=models.CharField(max_length=12, null=True, )
+    link=models.CharField(max_length=200, null=True, )
 
     def __str__(self):
         return self.link_name
@@ -49,3 +52,26 @@ class ProfileLink(models.Model):
     class Meta:
         verbose_name='Profile Link'
         verbose_name_plural='Profile Link'
+
+
+class Contact(models.Model):
+    name=models.CharField(max_length=20)
+    surname=models.CharField(max_length=20)
+    email=models.CharField(max_length=50)
+    topic_choice=(
+        ('Registration','Registration'),
+        ('Profile Avatar','Profile Avatar'),
+        ('Profile Settings','Profile Settings'),
+        ('Another','Another'),
+    )
+    summary=models.CharField(max_length=25, choices=topic_choice)
+    topic=models.TextField(max_length=200)
+    created=models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        verbose_name='Contacts'
+        verbose_name_plural='Contacts'
+
+    def __str__(self):
+        return self.summary
+

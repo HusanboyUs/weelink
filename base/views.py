@@ -1,20 +1,19 @@
-from multiprocessing import context
+
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Profile, ProfileLink
-from .forms import userRegisterForm,updateProfileForm,addLinksForm,editProfileLinkForm
-
-
+from .forms import ContactForm, userRegisterForm,updateProfileForm,addLinksForm,editProfileLinkForm
+from django.contrib import messages
 
 def registerView(request):
     form=userRegisterForm()
     if request.method=='POST':
-        form=userRegisterForm(request.POST)
+        form=userRegisterForm(request.POST,)
         if form.is_valid():
             form.save()
-            return redirect('homeView')  
+            return redirect('loginView')  
     context={'form':form}
     return render(request, 'main/signup.html',context)        
 
@@ -40,7 +39,7 @@ def profileView(request):
 def updateProfileView(request):
     form=updateProfileForm
     if request.method=='POST':
-        form=updateProfileForm(request.POST)
+        form=updateProfileForm(request.POST,request.FILES, instance=request.user.userprofile)
         if form.is_valid():
             instance=form.save(commit=False)
             instance.user=request.user
@@ -55,7 +54,6 @@ def updateProfileView(request):
 def addProfileLink(request):
     form=addLinksForm
     user=request.user
-    print(user)
     if request.method=='POST':
         form=addLinksForm(request.POST)
         if form.is_valid():
@@ -67,9 +65,7 @@ def addProfileLink(request):
             return redirect('profileView')
     context={'form':form}
     return render(request, 'main/addProfileLink.html', context)   
-
       
-    
 @login_required(login_url='loginView')
 def deleteProfileLink(request, pk):
     link=ProfileLink.objects.get(id=pk)
@@ -81,19 +77,30 @@ def deleteProfileLink(request, pk):
     return render(request, 'main/deleteLinks.html', context)        
 
 
-
-
 def userView(request, user_slug):
-    profile=get_object_or_404(Profile, slug=user_slug)
-    links=ProfileLink.objects.filter(user=profile)
-    context={'profile':profile, 'links':links}
+    try:
+        profile=get_object_or_404(Profile, slug=user_slug)
+        links=ProfileLink.objects.filter(user=profile)
+        context={'profile':profile, 'links':links}
+    except:
+        return render(request, 'main/not404.html')    
     return render(request, 'main/user.html', context)
 
-
 def homeView(request):
-    return render(request, 'main/home.html')
+    users=Profile.objects.all()
+    context={'users':users}
+    return render(request, 'main/home.html', context)
 
-
+def ContactView(request):
+    form=ContactForm()
+    if request.method=='POST':
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'We have recieved your message successfully!')
+            #return redirect('homeView')
+    context={'form':form}        
+    return render(request, 'main/contact.html', context)
 
 
     
